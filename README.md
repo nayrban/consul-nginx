@@ -12,5 +12,5 @@ This repo is a base to configure a Service Registry and a Load-Balance using
 
 
 
-Reference 
+Please read this Reference 
 https://github.com/osowski/registrator-sample
