@@ -1,0 +1,40 @@
+version: '3'
+services:
+  consul:
+    image: consul:latest
+    container_name: consul
+    environment:
+    - SERVICE_NAME=consul
+    hostname: ${MYHOST}
+    ports: 
+     - "8500:8500"
+  registrator:
+    image: gliderlabs/registrator:latest 
+    command: "-ip ${MYHOST} consul://${MYHOST}:8500"
+    container_name: registrator
+    environment:
+    - SERVICE_NAME=registrator
+    hostname: ${MYHOST}
+    volumes:
+        - /var/run/docker.sock:/tmp/docker.sock
+    depends_on:
+      - consul
+  nginx:
+    build: nginx/
+    image: local-proxy-nginx
+    environment:
+    - SERVICE_NAME=nginx
+    container_name: nginx
+    depends_on:
+      - consul
+    links:
+      - consul
+    ports:
+      - 80:80
+
+networks:
+  host:
+    driver: bridge
+
+
+
